@@ -57,11 +57,11 @@ def parse_flags(creds, config):
     parser = argparse.ArgumentParser()
     parser.add_argument("-u", 
                         "--username", 
-                        help="Your username for filer.net"
+                        help="Your username for filer.net",
                         type=str)
     parser.add_argument("-p",
                         "--password",
-                        help="Your password for filer.net"
+                        help="Your password for filer.net",
                         type=str)
     parser.add_argument("--save-credentials",
                         help="Store the username/password for future use",
@@ -73,15 +73,15 @@ def parse_flags(creds, config):
                         type=bool)
     parser.add_argument("-d",
                         "--dl-dir",
-                        help="The destination directory for downloads"
+                        help="The destination directory for downloads",
                         type=str)
     parser.add_argument("--force-reload",
                         help="Will force the program to reload the list of \
-                        files stored in the cached file_links.csv"
+                        files stored in the cached file_links.csv",
                         type=bool)
     parser.add_argument("-v",
                         "--verbose",
-                        help="Have the program output while running"
+                        help="Have the program output while running",
                         type=bool)
     args = parser.parse_args()
 
@@ -126,7 +126,7 @@ def store_settings(creds, config, save):
     return
     
 
-if (__name__ == __main__):
+if (__name__ == "__main__"):
     # Load credentials and settings from files
     creds,config = load_settings()
     
@@ -149,6 +149,6 @@ if (__name__ == __main__):
     downloader(config["Configuration"]["FilesURLs"],
                config["Configuration"]["DownloadDirectory"],
                config["Configuration"]["DownloadDirectory"],
-               config["Configuration"]["Verbose"]
+               config["Configuration"]["Verbose"],
                creds["LoginDetails"]["Username"],
                creds["LoginDetails"]["Password"])
