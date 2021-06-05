@@ -22,20 +22,23 @@ def load_settings():
     
     try:
         creds.read("credentials.ini")
+        assert creds["LoginDetails"] is not None
     except:
         creds["LoginDetails"] = {"Username": "",
                                     "Password": ""}
     
     try:
         config.read("config.ini")
+        assert config["Configuration"] is not None
     except:
         config["Configuration"] = {"DownloadDirectory": "../downloads",
                                    "LoginPageURL": "https://filer.net/login",
                                    "SourceFoldersURLs": "../data/source_list.txt",
-                                   "FilesURLs": "../file_links.csv",
+                                   "FilesURLs": "../data/file_links.csv",
                                    "Verbose": True,
                                    "ForceURLsReload": False}
 
+    print(config["Configuration"])
     return creds,config
 
 
@@ -93,7 +96,9 @@ def parse_flags(creds, config):
            "verbose": "Verbose"}
 
     # Overwrite new settings
-    for flag,value in vars(args).iteritems():
+    for flag,value in vars(args).items():
+        if flag in ["save_credentials", "save_config"]:
+            continue
         if (value is not None) and (flag in vars(args).keys()):
             if (flag in ["username", "password"]):
                 creds["LoginDetails"][key[flag]] = value
@@ -115,11 +120,11 @@ def store_settings(creds, config, save):
     Returns:
         None
     """
-    if save["save-creds"]:
+    if save["save-creds"] == "True":
         with open("credentials.ini", "w") as file:
             creds.write(file)
         
-    if save["save-config"]:
+    if save["save-config"] == "True":
         with open("config.ini", "w") as file:
             config.write(file)
 
@@ -138,17 +143,17 @@ if (__name__ == "__main__"):
     
     # Run the webscraping module
     if (not exists(config["Configuration"]["FilesURLs"])) \
-        or (config["Configuration"]["ForceURLsReload"]):
+        or (config["Configuration"]["ForceURLsReload"] == "True"):
         webscrap_links(config["Configuration"]["SourceFoldersURLs"])
     
     # Test for required variables
-    assert (args.username != ""), "No username provided to store."
-    assert (args.password != ""), "No password provided to store."
+    assert (creds["LoginDetails"]["Username"] != ""), "No username provided."
+    assert (creds["LoginDetails"]["Password"] != ""), "No password provided."
     
     # Run auto downloader module
     downloader(config["Configuration"]["FilesURLs"],
                config["Configuration"]["DownloadDirectory"],
-               config["Configuration"]["DownloadDirectory"],
+               config["Configuration"]["LoginPageURL"],
                config["Configuration"]["Verbose"],
                creds["LoginDetails"]["Username"],
                creds["LoginDetails"]["Password"])

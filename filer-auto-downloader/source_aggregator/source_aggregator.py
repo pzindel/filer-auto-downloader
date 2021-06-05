@@ -52,6 +52,6 @@ def webscrap_links(source_list):
             dl_files = dl_files.append({"filename": name, "url": dl_url}, ignore_index=True)
 
     # Save DataFrame to CSV file
-    dl_files.to_csv("file_links.csv", index=False)
+    dl_files.to_csv("../data/file_links.csv", index=False)
     
     return
